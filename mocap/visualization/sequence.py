@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from os.path import isdir, join
 from tqdm import tqdm
+import os
 from os import makedirs, system, remove, listdir
 import shutil
 import mocap.visualization.humanpose as hviz
@@ -38,7 +39,8 @@ class SequenceVisualizer:
 
         if to_file and isdir(seq_root):
             print("[visualizer] delete ", seq_root)
-            shutil.rmtree(seq_root)
+            print("[visualizer] skipping delete ", seq_root)
+            # shutil.rmtree(seq_root)
 
         if to_file:
             print('[visualizer] write to ', seq_root)
@@ -127,8 +129,10 @@ class SequenceVisualizer:
         seq_root = self.seq_root
         video_dir = join(seq_root, 'seq' + str(counter) + name)
         if to_file:
-            assert not isdir(video_dir)
-            makedirs(video_dir)
+            if not os.path.exists(video_dir):
+                os.makedirs(video_dir)
+            # assert not isdir(video_dir)
+            # makedirs(video_dir)
 
         n_views = len(views)
         fig = plt.figure(figsize=(n_views * 9, 9))

@@ -1,6 +1,8 @@
 import numpy as np
 import hashlib
 from enum import IntEnum
+import copy
+import torch
 
 
 class Limb(IntEnum):
@@ -57,6 +59,7 @@ class DataSet:
         self.framerate = framerate
         self.n_data_entries = len(Data)
         self.n_sequences = n_sequences
+
        
     def get_sequence_by_key(self, key):
         for kid, k in enumerate(self.Keys):
@@ -103,7 +106,17 @@ class DataSet:
         return result
     
     def __getitem__(self, key):
-        return self.get_sequence(key)
+        data = self.Data[0]
+        # index = np.random.randint(len(data)) # TODO: Use randomness for training and deterministic for test
+        index = key
+        entry = copy.deepcopy(data[index])[1:, :]
+        new_entry = {}
+        new_entry['kp_loc_3d'] = entry.transpose(-2, -1)
+        new_entry['kp_loc'] = entry[:, :2].transpose(-2, -1)
+        new_entry['kp_vis'] = torch.ones((new_entry['kp_loc'].shape[1]))
+        new_entry['kp_occ'] = new_entry['kp_loc'] * new_entry['kp_vis'][None]
+        # return self.get_sequence(key)
+        return new_entry
 
     def __len__(self):
         return len(self.Data[0])
@@ -312,5 +325,3 @@ class DataSetWithFramerateWithKeysIterator:
             return result
         else:
             raise StopIteration
-
-

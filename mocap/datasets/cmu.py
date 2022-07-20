@@ -119,7 +119,7 @@ def mirror(seq):
 
 class CMU(DataSet):
 
-  def __init__(self, subjects,
+  def __init__(self, subjects=ALL_SUBJECTS,
                store_binary=True,
                z_is_up=True,
                iterate_with_framerate=False,
