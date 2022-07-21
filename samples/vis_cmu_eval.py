@@ -9,19 +9,20 @@ import mocap.math.mirror_cmueval as MIR
 import mocap.math.fk_cmueval as FK
 from mocap.evaluation.npss import NPSS 
 import numpy as np
+from nrsfm_sbl.datasets.dataset_configs import CMU_MOTION_CATEGORIES
+from nrsfm_sbl.datasets.dataloader import CMUMocapDataloader
 
 
 vis_dir = '../output/'
 if not isdir(vis_dir):
     makedirs(vis_dir)
 
-ACTIVITES = ['walking']
-ds = CMUEval3D(ACTIVITES, DataType.TEST, remove_global_Rt=True)
-
-seq = ds[0][10:160]
+ACTIVITES=CMU_MOTION_CATEGORIES #['walking'] CMU_MOTION_CATEGORIES
+ds = CMUEval3D(ACTIVITES, DataType.TRAIN, remove_global_Rt=True)
+seq = ds[0] #[0][10:160]
 print('Seq', seq.shape)
-
 seq2 = MIR.mirror_p3d(seq)
+
 
 # seq = remove_duplicate_joints(ds[0][10:160])
 # seq = norm.remove_rotation_and_translation(

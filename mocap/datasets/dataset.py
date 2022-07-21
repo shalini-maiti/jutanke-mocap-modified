@@ -109,14 +109,15 @@ class DataSet:
         data = self.Data[0]
         # index = np.random.randint(len(data)) # TODO: Use randomness for training and deterministic for test
         index = key
-        entry = copy.deepcopy(data[index])[1:, :]
+        entry = copy.deepcopy(data[index])
         new_entry = {}
         new_entry['kp_loc_3d'] = entry.transpose(-2, -1)
         new_entry['kp_loc'] = entry[:, :2].transpose(-2, -1)
         new_entry['kp_vis'] = torch.ones((new_entry['kp_loc'].shape[1]))
         new_entry['kp_occ'] = new_entry['kp_loc'] * new_entry['kp_vis'][None]
-        # return self.get_sequence(key)
         return new_entry
+
+
 
     def __len__(self):
         return len(self.Data[0])
